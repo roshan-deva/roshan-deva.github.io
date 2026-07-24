@@ -375,6 +375,7 @@ a.card:hover .go svg, a.card:focus-visible .go svg { transform: translateX(5px);
 .bg-field { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
 .bg-field canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .orb { position: absolute; border-radius: 999px; filter: blur(46px); mix-blend-mode: screen; opacity: .5; }
+:root[data-theme="light"] .orb { mix-blend-mode: multiply; opacity: .22; }
 .orb-a { width: 32vw; height: 32vw; top: -8vw; right: 6vw; background: radial-gradient(circle, color-mix(in srgb, var(--slate) 55%, transparent), transparent 70%); animation: bgDriftA 15s ease-in-out infinite; }
 .orb-b { width: 26vw; height: 26vw; bottom: 4vw; left: 8vw; background: radial-gradient(circle, color-mix(in srgb, var(--cyan) 45%, transparent), transparent 70%); animation: bgDriftB 17.5s ease-in-out infinite; }
 .orb-c { width: 22vw; height: 22vw; top: 22vw; left: 2vw; background: radial-gradient(circle, color-mix(in srgb, #C46EE6 45%, transparent), transparent 70%); animation: bgDriftC 19s ease-in-out infinite; }
@@ -454,7 +455,7 @@ footer { padding: clamp(2.5rem, 5vw, 3.5rem) 0 clamp(3rem, 6vw, 4rem); border-to
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <div class="eyebrow rv">Coating Operations</div>
+      <div class="eyebrow rv">Tinkerer. Ops Guy. Full House, One Dog.</div>
             <h1 class="name">
         <span class="ln"><span>Roshan</span></span>
         <span class="ln"><span>Singh</span></span>
@@ -935,7 +936,7 @@ footer { padding: clamp(2.5rem, 5vw, 3.5rem) 0 clamp(3rem, 6vw, 4rem); border-to
     window.addEventListener('mousemove', function (e) { bMouse.x = e.clientX; bMouse.y = e.clientY; bMouse.active = true; });
     window.addEventListener('mouseleave', function () { bMouse.active = false; });
 
-    var N = 2600, R = Math.min(bw, bh) * 0.42, pts = [];
+    var N = 2600, R = Math.min(bw, bh) * 0.58, pts = [];
     var phi2 = Math.PI * (3 - Math.sqrt(5));
     for (var pi = 0; pi < N; pi++) {
       var py2 = 1 - (pi / (N - 1)) * 2;
@@ -947,10 +948,11 @@ footer { padding: clamp(2.5rem, 5vw, 3.5rem) 0 clamp(3rem, 6vw, 4rem); border-to
 
     function bTick() {
       bAngle += 0.0012;
+      var light = root.getAttribute('data-theme') === 'light';
       bctx.globalCompositeOperation = 'source-over';
-      bctx.fillStyle = 'rgba(10,13,16,0.06)';
+      bctx.fillStyle = light ? 'rgba(237,234,228,0.14)' : 'rgba(10,13,16,0.06)';
       bctx.fillRect(0, 0, bw, bh);
-      bctx.globalCompositeOperation = 'lighter';
+      bctx.globalCompositeOperation = light ? 'source-over' : 'lighter';
       var cx = bw / 2, cy = bh / 2, cosA = Math.cos(bAngle), sinA = Math.sin(bAngle);
       for (var qi = 0; qi < pts.length; qi++) {
         var p = pts[qi];
@@ -966,7 +968,7 @@ footer { padding: clamp(2.5rem, 5vw, 3.5rem) 0 clamp(3rem, 6vw, 4rem); border-to
         var size = Math.max(0.35, 0.9 * scale);
         var alpha = Math.min(0.38, scale * 0.28) * (0.4 + p.tone * 0.5);
         bctx.beginPath();
-        bctx.fillStyle = 'rgba(225,230,236,' + alpha + ')';
+        bctx.fillStyle = light ? 'rgba(20,24,28,' + (alpha * 0.85) + ')' : 'rgba(225,230,236,' + alpha + ')';
         bctx.arc(px, pyy, size, 0, Math.PI * 2);
         bctx.fill();
       }
