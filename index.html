@@ -271,7 +271,24 @@ h1.name .ln > span { display: block; }
   font-size: clamp(1.35rem, 3.4vw, 2rem); font-weight: 700;
   letter-spacing: -.015em; font-stretch: 90%; flex: none;
 }
-.sec-rule { flex: 1; height: 1px; background: var(--hairline); transform-origin: left; }
+.sec-rule {
+  flex: 1; height: 2px; transform-origin: left; position: relative;
+  background: linear-gradient(90deg, var(--hairline) 0%, var(--cyan) 50%, var(--hairline) 100%);
+  background-size: 220% 100%;
+  box-shadow: 0 0 12px -1px color-mix(in srgb, var(--cyan) 55%, transparent);
+  animation: secShimmer 7s linear infinite;
+}
+.sec-rule::before {
+  content: ''; position: absolute; inset: -3px 0; pointer-events: none;
+  background:
+    radial-gradient(circle 3px at 20% 50%, var(--cyan), transparent 70%),
+    radial-gradient(circle 3px at 55% 50%, var(--cyan), transparent 70%),
+    radial-gradient(circle 3px at 80% 50%, var(--cyan), transparent 70%);
+  animation: dividerPulse 2.4s ease-in-out infinite;
+}
+@keyframes secShimmer { 0% { background-position: 220% 0; } 100% { background-position: -220% 0; } }
+@keyframes dividerPulse { 0%, 100% { opacity: .3; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .sec-rule, .sec-rule::before { animation: none; } }
 .sec-count { font-family: var(--f-mono); font-size: .68rem; color: var(--ink-low); flex: none; }
 
 /* ═══════════════ CARD GRID ═══════════════ */
@@ -290,19 +307,17 @@ h1.name .ln > span { display: block; }
   transition-delay: calc(var(--i, 0) * var(--stagger));
 }
 .card.in { opacity: 1; transform: none; }
-.card::before {
-  content: ''; position: absolute; inset: 0; z-index: -1; opacity: 0;
-  background: conic-gradient(from var(--angle),
-    transparent 0deg, var(--amber) 42deg, var(--cyan) 92deg, transparent 155deg, transparent 360deg);
-  transition: opacity var(--t-hov) var(--e-smooth);
-}
 .card::after {
   content: ''; position: absolute; inset: 1px; z-index: -1; background: var(--bg-raise);
-  transition: background var(--t-hov) var(--e-smooth);
+  border: 1px solid transparent;
+  transition: background var(--t-hov) var(--e-smooth), border-color var(--t-hov) var(--e-smooth), backdrop-filter var(--t-hov) var(--e-smooth);
 }
-a.card:hover, a.card:focus-visible { background: transparent; }
-a.card:hover::before, a.card:focus-visible::before { opacity: 1; animation: spin 4s linear infinite; }
-@keyframes spin { to { --angle: 360deg; } }
+a.card:hover, a.card:focus-visible { background: transparent; box-shadow: var(--glow-amber); }
+a.card:hover::after, a.card:focus-visible::after {
+  background: color-mix(in srgb, var(--amber) 9%, var(--bg-raise));
+  border-color: color-mix(in srgb, var(--amber) 40%, transparent);
+  backdrop-filter: blur(3px);
+}
 
 a.card { cursor: pointer; }
 a.card:active { transform: translateY(1px) scale(.996); transition-duration: var(--t-tap); }
@@ -356,6 +371,23 @@ a.card:hover .go svg, a.card:focus-visible .go svg { transform: translateX(5px);
 }
 @keyframes blip { 0%,100% { opacity: .3; } 50% { opacity: 1; } }
 
+/* ═══════════════ AMBIENT ORB FIELD (bg) ═══════════════ */
+.bg-field { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.bg-field canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.orb { position: absolute; border-radius: 999px; filter: blur(46px); mix-blend-mode: screen; opacity: .5; }
+.orb-a { width: 32vw; height: 32vw; top: -8vw; right: 6vw; background: radial-gradient(circle, color-mix(in srgb, var(--slate) 55%, transparent), transparent 70%); animation: bgDriftA 15s ease-in-out infinite; }
+.orb-b { width: 26vw; height: 26vw; bottom: 4vw; left: 8vw; background: radial-gradient(circle, color-mix(in srgb, var(--cyan) 45%, transparent), transparent 70%); animation: bgDriftB 17.5s ease-in-out infinite; }
+.orb-c { width: 22vw; height: 22vw; top: 22vw; left: 2vw; background: radial-gradient(circle, color-mix(in srgb, #C46EE6 45%, transparent), transparent 70%); animation: bgDriftC 19s ease-in-out infinite; }
+.orb-d { width: 18vw; height: 18vw; bottom: -2vw; right: 14vw; background: radial-gradient(circle, color-mix(in srgb, var(--rust) 45%, transparent), transparent 70%); animation: bgDriftD 16s ease-in-out infinite; }
+.orb-e { width: 16vw; height: 16vw; top: 28vw; right: 30vw; background: radial-gradient(circle, color-mix(in srgb, #E85AA0 45%, transparent), transparent 70%); animation: bgDriftE 18.5s ease-in-out infinite; }
+@keyframes bgDriftA { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(3vw,-3.5vw) scale(1.2); } }
+@keyframes bgDriftB { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-3.2vw,2.6vw) scale(1.25); } }
+@keyframes bgDriftC { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(2.4vw,2vw) scale(1.18); } }
+@keyframes bgDriftD { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-2.2vw,-2.4vw) scale(1.3); } }
+@keyframes bgDriftE { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-1.8vw,2vw) scale(1.15); } }
+body > *:not(.bg-field) { position: relative; z-index: 1; }
+@media (prefers-reduced-motion: reduce) { .orb { animation: none !important; } }
+
 /* ═══════════════ PULL QUOTE ═══════════════ */
 .pull { padding: clamp(3rem, 8vw, 5rem) 0; border-block: 1px solid var(--hairline); background: var(--bg-deep); position: relative; overflow: hidden; }
 .pull::before {
@@ -401,6 +433,15 @@ footer { padding: clamp(2.5rem, 5vw, 3.5rem) 0 clamp(3rem, 6vw, 4rem); border-to
 </style>
 </head>
 <body>
+
+<div class="bg-field" aria-hidden="true">
+  <canvas id="particleBg"></canvas>
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="orb orb-c"></div>
+  <div class="orb orb-d"></div>
+  <div class="orb orb-e"></div>
+</div>
 
 <a class="skip" href="#work">Skip to work</a>
 
@@ -877,6 +918,66 @@ footer { padding: clamp(2.5rem, 5vw, 3.5rem) 0 clamp(3rem, 6vw, 4rem); border-to
       if (document.hidden) stop(); else start();
     });
     tog.addEventListener('click', function () { setTimeout(draw, 30); });
+  }
+
+  /* ═══ AMBIENT PARTICLE FIELD ═══
+     Sparse, irregular sphere of points, subtly mouse-reactive; sits behind
+     the page as a full-viewport backdrop. Skipped under reduced motion. */
+  var bgCv = document.getElementById('particleBg');
+  if (bgCv && bgCv.getContext && !reduce) {
+    var bctx = bgCv.getContext('2d');
+    var bw, bh, bAngle = 0;
+    var bMouse = { x: 0, y: 0, active: false };
+
+    function bResize() { bw = bgCv.width = window.innerWidth; bh = bgCv.height = window.innerHeight; }
+    bResize();
+    window.addEventListener('resize', bResize);
+    window.addEventListener('mousemove', function (e) { bMouse.x = e.clientX; bMouse.y = e.clientY; bMouse.active = true; });
+    window.addEventListener('mouseleave', function () { bMouse.active = false; });
+
+    var N = 2600, R = Math.min(bw, bh) * 0.42, pts = [];
+    var phi2 = Math.PI * (3 - Math.sqrt(5));
+    for (var pi = 0; pi < N; pi++) {
+      var py2 = 1 - (pi / (N - 1)) * 2;
+      var prad = Math.sqrt(1 - py2 * py2);
+      var pth = phi2 * pi;
+      var jitter = 0.62 + Math.random() * 0.55;
+      pts.push({ x: Math.cos(pth) * prad * R * jitter, y: py2 * R * jitter, z: Math.sin(pth) * prad * R * jitter, disp: 0, tone: Math.random() });
+    }
+
+    function bTick() {
+      bAngle += 0.0012;
+      bctx.globalCompositeOperation = 'source-over';
+      bctx.fillStyle = 'rgba(10,13,16,0.06)';
+      bctx.fillRect(0, 0, bw, bh);
+      bctx.globalCompositeOperation = 'lighter';
+      var cx = bw / 2, cy = bh / 2, cosA = Math.cos(bAngle), sinA = Math.sin(bAngle);
+      for (var qi = 0; qi < pts.length; qi++) {
+        var p = pts[qi];
+        var rx = p.x * cosA + p.z * sinA, rz = -p.x * sinA + p.z * cosA;
+        var depth = rz + R + 340, scale = 300 / depth;
+        var px = cx + rx * scale, pyy = cy + p.y * scale;
+        if (bMouse.active) {
+          var dx0 = px - bMouse.x, dy0 = pyy - bMouse.y, dist = Math.hypot(dx0, dy0), infl = 130;
+          var target = dist < infl ? (1 - dist / infl) * 0.55 : 0;
+          p.disp += (target - p.disp) * 0.12;
+        } else { p.disp += (0 - p.disp) * 0.08; }
+        if (p.disp > 0.001) { var dx = px - cx, dy = pyy - cy; px = cx + dx * (1 + p.disp); pyy = cy + dy * (1 + p.disp); }
+        var size = Math.max(0.35, 0.9 * scale);
+        var alpha = Math.min(0.38, scale * 0.28) * (0.4 + p.tone * 0.5);
+        bctx.beginPath();
+        bctx.fillStyle = 'rgba(225,230,236,' + alpha + ')';
+        bctx.arc(px, pyy, size, 0, Math.PI * 2);
+        bctx.fill();
+      }
+      requestAnimationFrame(bTick);
+    }
+    requestAnimationFrame(bTick);
+
+    document.addEventListener('visibilitychange', function () {
+      // No pause/resume needed here — cost is small and it must stay in sync
+      // with the mouse without a restart glitch.
+    });
   }
 })();
 </script>
