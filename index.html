@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Roshan Singh — Ops Portfolio Hub</title>
+<meta name="description" content="Dashboards, workflow automations and root-cause analysis from the coating floor. Director, Coating Operations.">
+<meta name="theme-color" content="#0A0D10" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#EDEAE4" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="dark light">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ops Hub">
+<meta property="og:title" content="Roshan Singh — Ops Portfolio Hub">
+<meta property="og:description" content="Dashboards, workflow automations and root-cause analysis from the coating floor.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='2' fill='%230A0D10'/%3E%3Crect x='4' y='13' width='24' height='6' rx='3' fill='%23FFA424'/%3E%3Cellipse cx='28' cy='16' rx='2.5' ry='3' fill='%23FFC46B'/%3E%3C/svg%3E">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN TOKENS — "Coated Steel"
+   ═══════════════════════════════════════════════════════════════ */
+@property --angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+
+:root {
+  /* SURFACES */
+  --bg-void:      #0A0D10;
+  --bg-deep:      #0F141A;
+  --bg-card:      #151C24;
+  --bg-raise:     #1C242E;
+  --hairline:     #262F3A;
+  --hairline-hot: #38444F;
+
+  /* INK */
+  --ink-hi:  #E9EEF3;
+  --ink-mid: #97A5B3;
+  --ink-low: #5D6B78;
+
+  /* ACCENTS */
+  --amber:     #FFA424;
+  --amber-dim: #B36F14;
+  --cyan:      #3FC7DE;
+  --green:     #4FD69C;
+  --rust:      #E56A4C;
+  --slate:     #6B7A89;
+
+  /* GLOW / SHADOW */
+  --glow-amber:  0 0 0 1px rgba(255,164,36,.28), 0 10px 40px -12px rgba(255,164,36,.40);
+  --shadow-card: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px -16px rgba(0,0,0,.9);
+
+  /* RADIUS — industrial = sharp */
+  --r-xs: 1px; --r-sm: 2px; --r-md: 4px; --r-pill: 999px;
+
+  /* EASING */
+  --e-expo:   cubic-bezier(0.16, 1, 0.30, 1);
+  --e-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --e-smooth: cubic-bezier(0.40, 0, 0.20, 1);
+
+  /* DURATION */
+  --t-tap: 110ms; --t-hov: 220ms; --t-move: 420ms;
+  --t-reveal: 780ms; --stagger: 60ms;
+
+  /* SPACE */
+  --gut: clamp(1.25rem, 4vw, 3.5rem);
+  --max: 1180px;
+
+  /* TYPE */
+  --f-display: "Bricolage Grotesque", "Bahnschrift", "DIN Alternate", -apple-system, sans-serif;
+  --f-body:    "Archivo", -apple-system, "Segoe UI", system-ui, sans-serif;
+  --f-mono:    "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
+}
+
+/* LIGHT THEME — concrete, not paper-white */
+:root[data-theme="light"] {
+  --bg-void: #EDEAE4; --bg-deep: #F4F2ED; --bg-card: #FFFFFF; --bg-raise: #FBFAF7;
+  --hairline: #D9D4CA; --hairline-hot: #B5AEA1;
+  --ink-hi: #14181C; --ink-mid: #4A555F; --ink-low: #7C8792;
+  --amber: #B96F00; --amber-dim: #8A5400; --cyan: #0E7F94; --green: #1F8A5F;
+  --rust: #B84A2E; --slate: #6B7A89;
+  --glow-amber:  0 0 0 1px rgba(185,111,0,.30), 0 10px 40px -14px rgba(185,111,0,.35);
+  --shadow-card: 0 1px 2px rgba(20,24,28,.07), 0 12px 28px -18px rgba(20,24,28,.35);
+}
+
+/* ═══════════════ BASE ═══════════════ */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg-void); color: var(--ink-mid);
+  font-family: var(--f-body); font-size: 16px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  transition: background var(--t-hov) var(--e-smooth), color var(--t-hov) var(--e-smooth);
+}
+h1,h2,h3 { font-family: var(--f-display); color: var(--ink-hi); margin: 0; line-height: 1.02; font-weight: 700; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; border-radius: var(--r-sm); }
+
+.wrap { max-width: var(--max); margin-inline: auto; padding-inline: var(--gut); }
+
+/* GRAIN OVERLAY */
+body::after {
+  content: ''; position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+  opacity: .045; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ═══════════════ SKIP LINK ═══════════════ */
+.skip {
+  position: absolute; left: -9999px; top: 0; z-index: 10000;
+  background: var(--amber); color: #0A0D10; padding: .7rem 1.1rem;
+  font-family: var(--f-mono); font-size: .75rem; font-weight: 700; letter-spacing: .06em;
+}
+.skip:focus { left: 1rem; top: 1rem; }
+
+/* ═══════════════ TOP BAR ═══════════════ */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .85rem var(--gut);
+  background: color-mix(in srgb, var(--bg-void) 82%, transparent);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  border-bottom: 1px solid var(--hairline);
+}
+.mark {
+  font-family: var(--f-mono); font-size: .7rem; font-weight: 700;
+  letter-spacing: .18em; color: var(--ink-low); text-transform: uppercase;
+  display: flex; align-items: center; gap: .55rem;
+}
+.mark .dot {
+  width: 6px; height: 6px; border-radius: var(--r-pill); background: var(--green);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--green) 60%, transparent);
+  animation: pulse 2.6s var(--e-smooth) infinite;
+}
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--green) 55%, transparent); }
+  70%  { box-shadow: 0 0 0 7px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+.tog {
+  background: transparent; border: 1px solid var(--hairline); color: var(--ink-mid);
+  font-family: var(--f-mono); font-size: .66rem; font-weight: 500; letter-spacing: .1em;
+  padding: .45rem .7rem; border-radius: var(--r-sm); cursor: pointer;
+  transition: border-color var(--t-hov) var(--e-smooth), color var(--t-hov) var(--e-smooth);
+}
+.tog:hover { border-color: var(--amber); color: var(--amber); }
+
+/* ═══════════════ HERO ═══════════════ */
+.hero { padding: clamp(3rem, 9vw, 6.5rem) 0 clamp(2.5rem, 6vw, 4rem); position: relative; }
+.hero-grid { display: grid; grid-template-columns: 1fr; gap: clamp(2rem, 5vw, 3.5rem); align-items: center; }
+@media (min-width: 900px) { .hero-grid { grid-template-columns: 1.08fr .92fr; } }
+
+.eyebrow {
+  font-family: var(--f-mono); font-size: .7rem; font-weight: 500;
+  letter-spacing: .22em; text-transform: uppercase; color: var(--amber);
+  display: flex; align-items: center; gap: .7rem; margin-bottom: 1.4rem;
+}
+.eyebrow::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--amber-dim), transparent); }
+
+h1.name {
+  font-size: clamp(2.9rem, 9.5vw, 6.1rem);
+  font-weight: 800; letter-spacing: -.035em;
+  font-stretch: 88%;
+  margin-bottom: .55rem;
+}
+h1.name .ln { display: block; overflow: hidden; }
+h1.name .ln > span { display: block; }
+
+.role {
+  font-family: var(--f-mono); font-size: clamp(.78rem, 1.9vw, .95rem);
+  font-weight: 500; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-hi); padding-bottom: 1.3rem; margin-bottom: 1.3rem;
+  border-bottom: 1px solid var(--hairline);
+}
+.role em { font-style: normal; color: var(--amber); }
+
+.lede { font-size: clamp(1.02rem, 2.2vw, 1.2rem); max-width: 46ch; color: var(--ink-mid); }
+.lede strong { color: var(--ink-hi); font-weight: 600; }
+
+/* ROTATING QUOTE */
+.qrot { margin-top: 2rem; min-height: 3.6em; display: flex; align-items: flex-start; gap: .85rem; }
+.qrot .bar { width: 2px; align-self: stretch; background: linear-gradient(180deg, var(--amber), transparent); flex: none; }
+.qrot-inner { position: relative; flex: 1; }
+.qrot q {
+  display: block; font-family: var(--f-display); font-weight: 500; font-style: italic;
+  font-size: clamp(1.02rem, 2.4vw, 1.32rem); color: var(--ink-hi); quotes: '"' '"';
+  opacity: 0; transform: translateY(9px);
+  transition: opacity var(--t-move) var(--e-smooth), transform var(--t-move) var(--e-expo);
+  position: absolute; inset: 0;
+}
+.qrot q.on { opacity: 1; transform: none; position: relative; }
+
+/* ═══════════════ CANVAS ═══════════════ */
+.pipe-shell {
+  position: relative; border: 1px solid var(--hairline); border-radius: var(--r-sm);
+  background:
+    linear-gradient(var(--hairline) 1px, transparent 1px) 0 0/100% 34px,
+    linear-gradient(90deg, var(--hairline) 1px, transparent 1px) 0 0/34px 100%,
+    var(--bg-deep);
+  background-blend-mode: normal;
+  overflow: hidden; aspect-ratio: 16/10;
+}
+.pipe-shell::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 2;
+  background: radial-gradient(120% 90% at 50% 50%, transparent 42%, var(--bg-void) 100%);
+  opacity: .85;
+}
+.pipe-shell canvas { display: block; width: 100%; height: 100%; position: relative; z-index: 1; }
+.pipe-tag {
+  position: absolute; left: .75rem; bottom: .7rem; z-index: 3;
+  font-family: var(--f-mono); font-size: .6rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--ink-low);
+}
+.pipe-tag b { color: var(--amber); font-weight: 500; }
+
+/* ═══════════════ SECTIONS ═══════════════ */
+.sec { padding: clamp(2.6rem, 6vw, 4.2rem) 0; }
+.sec-head { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.9rem; }
+.sec-num {
+  font-family: var(--f-mono); font-size: .72rem; font-weight: 700;
+  letter-spacing: .1em; color: var(--amber); flex: none;
+}
+.sec-head h2 {
+  font-size: clamp(1.35rem, 3.4vw, 2rem); font-weight: 700;
+  letter-spacing: -.015em; font-stretch: 90%; flex: none;
+}
+.sec-rule { flex: 1; height: 1px; background: var(--hairline); transform-origin: left; }
+.sec-count { font-family: var(--f-mono); font-size: .68rem; color: var(--ink-low); flex: none; }
+
+/* ═══════════════ CARD GRID ═══════════════ */
+.grid { display: grid; gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--r-sm); overflow: hidden; }
+@media (min-width: 640px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+
+.card {
+  position: relative; display: flex; flex-direction: column; gap: .7rem;
+  padding: 1.5rem 1.4rem 1.3rem; background: var(--bg-card); isolation: isolate;
+  opacity: 0; transform: translateY(22px);
+  transition:
+    opacity var(--t-reveal) var(--e-expo),
+    transform var(--t-move) var(--e-expo),
+    background var(--t-hov) var(--e-smooth);
+  transition-delay: calc(var(--i, 0) * var(--stagger));
+}
+.card.in { opacity: 1; transform: none; }
+.card::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; opacity: 0;
+  background: conic-gradient(from var(--angle),
+    transparent 0deg, var(--amber) 42deg, var(--cyan) 92deg, transparent 155deg, transparent 360deg);
+  transition: opacity var(--t-hov) var(--e-smooth);
+}
+.card::after {
+  content: ''; position: absolute; inset: 1px; z-index: -1; background: var(--bg-raise);
+  transition: background var(--t-hov) var(--e-smooth);
+}
+a.card:hover, a.card:focus-visible { background: transparent; }
+a.card:hover::before, a.card:focus-visible::before { opacity: 1; animation: spin 4s linear infinite; }
+@keyframes spin { to { --angle: 360deg; } }
+
+a.card { cursor: pointer; }
+a.card:active { transform: translateY(1px) scale(.996); transition-duration: var(--t-tap); }
+
+.card-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.chip {
+  font-family: var(--f-mono); font-size: .58rem; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase;
+  padding: .3rem .5rem; border-radius: var(--r-xs);
+  color: var(--c); border: 1px solid color-mix(in srgb, var(--c) 34%, transparent);
+  background: color-mix(in srgb, var(--c) 9%, transparent);
+}
+.chip[data-t="dashboard"]  { --c: var(--cyan); }
+.chip[data-t="automation"] { --c: var(--amber); }
+.chip[data-t="rca"]        { --c: var(--rust); }
+.chip[data-t="learning"]   { --c: var(--green); }
+.chip[data-t="soon"]       { --c: var(--slate); }
+.idx { font-family: var(--f-mono); font-size: .62rem; color: var(--ink-low); letter-spacing: .08em; }
+
+.card h3 {
+  font-size: 1.09rem; font-weight: 600; letter-spacing: -.012em; line-height: 1.24;
+  background-image: linear-gradient(var(--amber), var(--amber));
+  background-size: 0% 1px; background-position: 0 100%; background-repeat: no-repeat;
+  transition: background-size var(--t-move) var(--e-expo);
+  padding-bottom: 2px; align-self: flex-start;
+}
+a.card:hover h3, a.card:focus-visible h3 { background-size: 100% 1px; }
+
+.card p { margin: 0; font-size: .875rem; line-height: 1.55; color: var(--ink-mid); flex: 1; }
+
+.card-foot { display: flex; align-items: center; justify-content: space-between; margin-top: .35rem; }
+.go {
+  font-family: var(--f-mono); font-size: .63rem; font-weight: 500;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--ink-low);
+  display: flex; align-items: center; gap: .5rem;
+  transition: color var(--t-hov) var(--e-smooth);
+}
+a.card:hover .go, a.card:focus-visible .go { color: var(--amber); }
+.go svg { transition: transform var(--t-move) var(--e-spring); }
+a.card:hover .go svg, a.card:focus-visible .go svg { transform: translateX(5px); }
+
+/* COMING-SOON STATE */
+.card.soon { background: color-mix(in srgb, var(--bg-card) 72%, var(--bg-void)); }
+.card.soon h3 { color: var(--ink-mid); }
+.card.soon p  { color: var(--ink-low); }
+.card.soon::after { background: transparent; }
+.soon-flag { font-family: var(--f-mono); font-size: .63rem; letter-spacing: .14em; text-transform: uppercase; color: var(--slate); display: flex; align-items: center; gap: .5rem; }
+.soon-flag .blip {
+  width: 5px; height: 5px; border-radius: var(--r-pill); background: var(--slate);
+  animation: blip 2.2s var(--e-smooth) infinite;
+}
+@keyframes blip { 0%,100% { opacity: .3; } 50% { opacity: 1; } }
+
+/* ═══════════════ PULL QUOTE ═══════════════ */
+.pull { padding: clamp(3rem, 8vw, 5rem) 0; border-block: 1px solid var(--hairline); background: var(--bg-deep); position: relative; overflow: hidden; }
+.pull::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(60% 140% at 12% 50%, color-mix(in srgb, var(--amber) 9%, transparent), transparent 70%);
+}
+.pull blockquote {
+  margin: 0; position: relative;
+  font-family: var(--f-display); font-weight: 500; font-style: italic;
+  font-size: clamp(1.35rem, 4.6vw, 2.55rem); line-height: 1.22;
+  letter-spacing: -.02em; color: var(--ink-hi); max-width: 20ch;
+}
+.pull blockquote::before {
+  content: ''; display: block; width: 46px; height: 2px;
+  background: var(--amber); margin-bottom: 1.5rem;
+}
+
+/* ═══════════════ FOOTER ═══════════════ */
+footer { padding: clamp(2.5rem, 5vw, 3.5rem) 0 clamp(3rem, 6vw, 4rem); border-top: 1px solid var(--hairline); }
+.foot-in { display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: center; justify-content: space-between; }
+.foot-in p { margin: 0; font-family: var(--f-mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-low); }
+.foot-in p b { color: var(--ink-mid); font-weight: 500; }
+
+/* ═══════════════ REVEAL (non-card) ═══════════════ */
+.rv { opacity: 0; transform: translateY(18px); transition: opacity var(--t-reveal) var(--e-expo), transform var(--t-move) var(--e-expo); }
+.rv.in { opacity: 1; transform: none; }
+
+/* ═══════════════ REDUCED MOTION ═══════════════ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  .card, .rv { opacity: 1 !important; transform: none !important; }
+  .qrot q { position: relative; opacity: 1; transform: none; }
+  .qrot q:not(.on) { display: none; }
+}
+
+/* ═══════════════ PRINT ═══════════════ */
+@media print {
+  body { background: #fff; color: #000; }
+  .topbar, .pipe-shell, body::after { display: none; }
+  .card { opacity: 1 !important; transform: none !important; break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#work">Skip to work</a>
+
+<header class="topbar">
+  <span class="mark"><span class="dot" aria-hidden="true"></span>RS &middot; Ops Hub</span>
+  <button class="tog" id="tog" type="button" aria-label="Switch colour theme">LIGHT</button>
+</header>
+
+<!-- ════════ HERO ════════ -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow rv">Coating Operations</div>
+      <h1 class="name">
+        <span class="ln"><span>Roshan</span></span>
+        <span class="ln"><span>Singh</span></span>
+      </h1>
+      <div class="role rv">Director, <em>Coating Operations</em></div>
+      <p class="lede rv">I turn plant-floor chaos into <strong>dashboards you can read in one glance</strong> and root-cause stories that actually close out. Everything below is something that shipped.</p>
+
+      <div class="qrot rv" id="qrot">
+        <span class="bar" aria-hidden="true"></span>
+        <div class="qrot-inner">
+          <q class="on">Holidays are for people, not pipelines</q>
+          <q>Coffee, data, controlled paranoia</q>
+          <q>Automate the boring. Interrogate the weird</q>
+        </div>
+      </div>
+    </div>
+
+    <div class="pipe-shell rv">
+      <canvas id="pipe" role="img" aria-label="Animated diagram of a pipe being coated, with the coating front travelling along its length"></canvas>
+      <span class="pipe-tag">Line 1 &middot; <b>coating pass</b></span>
+    </div>
+  </div>
+</section>
+
+<main id="work">
+
+<!-- ════════ 01 DASHBOARDS ════════ -->
+<section class="sec wrap">
+  <div class="sec-head rv">
+    <span class="sec-num">01</span>
+    <h2>Dashboards</h2>
+    <span class="sec-rule" aria-hidden="true"></span>
+    <span class="sec-count">3</span>
+  </div>
+  <div class="grid">
+
+    <a class="card" style="--i:0" href="https://roshan-deva.github.io/shift-dashboard/">
+      <div class="card-top"><span class="chip" data-t="dashboard">Dashboard</span><span class="idx">01</span></div>
+      <h3>Daily Shift Snapshot</h3>
+      <p>Every shift's output condensed onto one screen you can actually read on a phone, standing at the line.</p>
+      <div class="card-foot"><span class="go">Open<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7"/></svg></span></div>
+    </a>
+
+    <a class="card" style="--i:1" href="https://roshan-deva.github.io/Work/06Opstask/">
+      <div class="card-top"><span class="chip" data-t="dashboard">Dashboard</span><span class="idx">02</span></div>
+      <h3>RIT — Impact Tracker</h3>
+      <p>A running log of operational wins: what changed, what it moved, and when it landed.</p>
+      <div class="card-foot"><span class="go">Open<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7"/></svg></span></div>
+    </a>
+
+    <div class="card soon" style="--i:2">
+      <div class="card-top"><span class="chip" data-t="soon">Coming Soon</span><span class="idx">03</span></div>
+      <h3>KPI Pipeline Dashboard</h3>
+      <p>Daily coating KPIs pulled, checked and published on their own, with no one retyping a thing.</p>
+      <div class="card-foot"><span class="soon-flag"><span class="blip" aria-hidden="true"></span>Coming online</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════ 02 WORKFLOW AUTOMATIONS ════════ -->
+<section class="sec wrap">
+  <div class="sec-head rv">
+    <span class="sec-num">02</span>
+    <h2>Workflow Automations</h2>
+    <span class="sec-rule" aria-hidden="true"></span>
+    <span class="sec-count">4</span>
+  </div>
+  <div class="grid">
+
+    <a class="card" style="--i:0" href="https://roshan-deva.github.io/Work/OD_Stripping_Report_F07.html">
+      <div class="card-top"><span class="chip" data-t="automation">Automation</span><span class="idx">01</span></div>
+      <h3>Stripping Report</h3>
+      <p>The clipboard version of this form, rebuilt as a structured log that timestamps itself and can be searched later.</p>
+      <div class="card-foot"><span class="go">Open<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7"/></svg></span></div>
+    </a>
+
+    <a class="card" style="--i:1" href="https://roshan-deva.github.io/Work/Discrepancy_Log.html">
+      <div class="card-top"><span class="chip" data-t="automation">Automation</span><span class="idx">02</span></div>
+      <h3>Loadout Discrepancy Report</h3>
+      <p>Catches count mismatches at the loadout itself, instead of discovering them weeks later in a reconciliation.</p>
+      <div class="card-foot"><span class="go">Open<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7"/></svg></span></div>
+    </a>
+
+    <a class="card" style="--i:2" href="https://roshan-deva.github.io/Work/Walk_Through_Report_F17.html">
+      <div class="card-top"><span class="chip" data-t="automation">Automation</span><span class="idx">03</span></div>
+      <h3>Walkthrough Report</h3>
+      <p>Plant walkthrough findings captured where they happen, in a shape that survives the walk back to the office.</p>
+      <div class="card-foot"><span class="go">Open<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7"/></svg></span></div>
+    </a>
+
+    <div class="card soon" style="--i:3">
+      <div class="card-top"><span class="chip" data-t="soon">Coming Soon</span><span class="idx">04</span></div>
+      <h3>Digital Operator Logs</h3>
+      <p>The rest of the paper forms on the coating floor, converted one at a time into web forms.</p>
+      <div class="card-foot"><span class="soon-flag"><span class="blip" aria-hidden="true"></span>Coming online</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════ PULL QUOTE ════════ -->
+<section class="pull">
+  <div class="wrap">
+    <blockquote class="rv">Root cause, or it didn't happen. Every defect confesses eventually</blockquote>
+  </div>
+</section>
+
+<!-- ════════ 03 BREAKDOWN ANALYSIS ════════ -->
+<section class="sec wrap">
+  <div class="sec-head rv">
+    <span class="sec-num">03</span>
+    <h2>Breakdown Analysis</h2>
+    <span class="sec-rule" aria-hidden="true"></span>
+    <span class="sec-count">2</span>
+  </div>
+  <div class="grid">
+
+    <div class="card soon" style="--i:0">
+      <div class="card-top"><span class="chip" data-t="soon">Coming Soon</span><span class="idx">01</span></div>
+      <h3>Internal Blast Boom</h3>
+      <p>A teardown of one recurring equipment failure: the timeline, the actual cause, and the fix that finally held.</p>
+      <div class="card-foot"><span class="soon-flag"><span class="blip" aria-hidden="true"></span>Coming online</span></div>
+    </div>
+
+    <div class="card soon" style="--i:1">
+      <div class="card-top"><span class="chip" data-t="soon">Coming Soon</span><span class="idx">02</span></div>
+      <h3>FBE Powder Analysis</h3>
+      <p>How a stubborn coating defect got traced back past the line, past the process, to the powder itself.</p>
+      <div class="card-foot"><span class="soon-flag"><span class="blip" aria-hidden="true"></span>Coming online</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════ 04 LEARNINGS ════════ -->
+<section class="sec wrap">
+  <div class="sec-head rv">
+    <span class="sec-num">04</span>
+    <h2>Learnings</h2>
+    <span class="sec-rule" aria-hidden="true"></span>
+    <span class="sec-count">3</span>
+  </div>
+  <div class="grid">
+
+    <a class="card" style="--i:0" href="https://roshan-deva.github.io/Work/HSAW_Playbook_Follow_the_Coil.html">
+      <div class="card-top"><span class="chip" data-t="learning">Learning</span><span class="idx">01</span></div>
+      <h3>Follow the Coil</h3>
+      <p>Ride one steel coil from end to end and pick up how a spiral pipe mill really works along the way.</p>
+      <div class="card-foot"><span class="go">Read<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7"/></svg></span></div>
+    </a>
+
+    <a class="card" style="--i:1" href="https://roshan-deva.github.io/Work/NDT_Fundamentals_Flaw_Detectives.html">
+      <div class="card-top"><span class="chip" data-t="learning">Learning</span><span class="idx">02</span></div>
+      <h3>Flaw Detectives — NDT</h3>
+      <p>How pipe gets inspected for defects without ever cutting it open, and what each method can and can't see.</p>
+      <div class="card-foot"><span class="go">Read<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7"/></svg></span></div>
+    </a>
+
+    <a class="card" style="--i:2" href="https://roshan-deva.github.io/Work/Coating_Application_Pipe_Armor.html">
+      <div class="card-top"><span class="chip" data-t="learning">Learning</span><span class="idx">03</span></div>
+      <h3>Pipe Armor — Coating</h3>
+      <p>Why bare steel pipe gets coated at all, and what every layer is quietly doing once it's buried.</p>
+      <div class="card-foot"><span class="go">Read<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7"/></svg></span></div>
+    </a>
+
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <p>Built with <b>Claude Code</b></p>
+    <p>&copy; 2026 Roshan Singh</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ═══ THEME TOGGLE ═══
+     Respect the OS preference on first visit, then let an explicit choice win
+     and persist. localStorage can throw in private mode, so it stays guarded. */
+  var root = document.documentElement, tog = document.getElementById('tog');
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function read(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+
+  var saved = read('ophub-theme');
+  var initial = saved || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  setTheme(initial);
+
+  function setTheme(t) {
+    root.setAttribute('data-theme', t);
+    tog.textContent = t === 'dark' ? 'LIGHT' : 'DARK';
+    tog.setAttribute('aria-label', 'Switch to ' + (t === 'dark' ? 'light' : 'dark') + ' theme');
+  }
+  tog.addEventListener('click', function () {
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    setTheme(next); store('ophub-theme', next);
+  });
+
+  /* ═══ SCROLL REVEAL ═══
+     One shared observer for cards and .rv elements. Each target unobserves
+     itself after firing so the callback stops running for the rest of the page. */
+  var targets = document.querySelectorAll('.card, .rv');
+  if (reduce || !('IntersectionObserver' in window)) {
+    for (var i = 0; i < targets.length; i++) targets[i].classList.add('in');
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
+    for (var j = 0; j < targets.length; j++) io.observe(targets[j]);
+  }
+
+  /* ═══ MAGNETIC HOVER ═══
+     Cursor-following tilt, capped at 6px so it reads as weight rather than
+     wobble. Gated to fine pointers: on touch there is no hover to track. */
+  if (!reduce && window.matchMedia('(pointer: fine)').matches) {
+    document.querySelectorAll('a.card').forEach(function (card) {
+      card.addEventListener('pointermove', function (ev) {
+        var r = card.getBoundingClientRect();
+        var dx = (ev.clientX - r.left) / r.width - 0.5;
+        var dy = (ev.clientY - r.top) / r.height - 0.5;
+        card.style.transform = 'translate(' + (dx * 6).toFixed(2) + 'px,' + (dy * 6 - 3).toFixed(2) + 'px)';
+      });
+      card.addEventListener('pointerleave', function () { card.style.transform = ''; });
+    });
+  }
+
+  /* ═══ QUOTE ROTATOR ═══ */
+  var qs = document.querySelectorAll('#qrot q');
+  if (!reduce && qs.length > 1) {
+    var qi = 0, qTimer = setInterval(rotate, 5200);
+    var qrot = document.getElementById('qrot');
+    qrot.addEventListener('pointerenter', function () { clearInterval(qTimer); });
+    qrot.addEventListener('pointerleave', function () { qTimer = setInterval(rotate, 5200); });
+    function rotate() {
+      qs[qi].classList.remove('on');
+      qi = (qi + 1) % qs.length;
+      qs[qi].classList.add('on');
+    }
+  }
+
+  /* ═══ ISOMETRIC PIPE — COATING PASS ═══
+     A cylinder drawn side-on with a slight tilt. The coating front sweeps
+     left→right; everything behind it is amber, everything ahead is bare steel.
+     Sized against devicePixelRatio so it stays crisp on a Retina phone. */
+  var cv = document.getElementById('pipe');
+  if (cv && cv.getContext) {
+    var ctx = cv.getContext('2d'), W = 0, H = 0, raf = null, prog = 0, drift = 0;
+
+    function resize() {
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var r = cv.getBoundingClientRect();
+      W = r.width; H = r.height;
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function tokens() {
+      var cs = getComputedStyle(root);
+      return {
+        amber: cs.getPropertyValue('--amber').trim() || '#FFA424',
+        line:  cs.getPropertyValue('--hairline-hot').trim() || '#38444F',
+        light: root.getAttribute('data-theme') === 'light'
+      };
+    }
+
+    function draw() {
+      var t = tokens();
+      ctx.clearRect(0, 0, W, H);
+
+      var cy = H * 0.5, len = W * 0.78, x0 = (W - len) / 2, x1 = x0 + len;
+      var r = Math.min(H * 0.19, 54), rx = r * 0.30;
+      var front = x0 + len * prog;
+
+      ctx.save();
+      ctx.translate(W / 2, cy); ctx.rotate(-0.085); ctx.translate(-W / 2, -cy);
+
+      // bare steel body
+      var steel = ctx.createLinearGradient(0, cy - r, 0, cy + r);
+      if (t.light) {
+        steel.addColorStop(0, '#9AA3AC'); steel.addColorStop(.34, '#E2E6EA');
+        steel.addColorStop(.62, '#AEB6BE'); steel.addColorStop(1, '#767E86');
+      } else {
+        steel.addColorStop(0, '#2A333D'); steel.addColorStop(.34, '#657381');
+        steel.addColorStop(.62, '#3D4954'); steel.addColorStop(1, '#1B222A');
+      }
+      ctx.fillStyle = steel;
+      ctx.fillRect(x0, cy - r, len, r * 2);
+
+      // coated portion
+      ctx.save();
+      ctx.beginPath(); ctx.rect(x0, cy - r - 2, front - x0, r * 2 + 4); ctx.clip();
+      var coat = ctx.createLinearGradient(0, cy - r, 0, cy + r);
+      coat.addColorStop(0, t.light ? '#8A5200' : '#7A4A08');
+      coat.addColorStop(.32, t.amber);
+      coat.addColorStop(.58, t.light ? '#C97F0A' : '#C4791A');
+      coat.addColorStop(1, t.light ? '#6B3F00' : '#4E2F06');
+      ctx.fillStyle = coat;
+      ctx.fillRect(x0, cy - r, len, r * 2);
+      ctx.restore();
+
+      // weld rings, drifting along the run
+      ctx.strokeStyle = t.light ? 'rgba(20,24,28,.16)' : 'rgba(0,0,0,.34)';
+      ctx.lineWidth = 1;
+      for (var x = x0 + (drift % 74); x < x1; x += 74) {
+        if (x <= x0) continue;
+        ctx.beginPath(); ctx.ellipse(x, cy, rx, r, 0, 0, Math.PI * 2); ctx.stroke();
+      }
+
+      // coating front — glow + hot edge
+      if (prog > 0.005 && prog < 0.995) {
+        ctx.save();
+        ctx.shadowColor = t.amber; ctx.shadowBlur = 26;
+        ctx.strokeStyle = t.light ? '#FFD08A' : '#FFD79B';
+        ctx.lineWidth = 2.4;
+        ctx.beginPath(); ctx.ellipse(front, cy, rx, r, 0, 0, Math.PI * 2); ctx.stroke();
+        ctx.restore();
+      }
+
+      // end cap
+      ctx.beginPath(); ctx.ellipse(x1, cy, rx, r, 0, 0, Math.PI * 2);
+      ctx.fillStyle = prog > 0.995 ? (t.light ? '#7A4A08' : '#5C3A0C') : (t.light ? '#8E979F' : '#222A33');
+      ctx.fill();
+      ctx.strokeStyle = t.line; ctx.lineWidth = 1; ctx.stroke();
+
+      // bore
+      ctx.beginPath(); ctx.ellipse(x1, cy, rx * 0.52, r * 0.52, 0, 0, Math.PI * 2);
+      ctx.fillStyle = t.light ? '#5A6068' : '#0B0F13';
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function tick() {
+      prog += 0.0026; drift += 0.34;
+      if (prog > 1.22) prog = -0.06;
+      draw();
+      raf = requestAnimationFrame(tick);
+    }
+
+    function start() { if (raf === null && !reduce) raf = requestAnimationFrame(tick); }
+    function stop()  { if (raf !== null) { cancelAnimationFrame(raf); raf = null; } }
+
+    resize(); prog = reduce ? 0.62 : 0; draw();
+    if (!reduce) start();
+
+    window.addEventListener('resize', function () { resize(); draw(); });
+    // Stop burning frames when the tab is backgrounded.
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) stop(); else start();
+    });
+    tog.addEventListener('click', function () { setTimeout(draw, 30); });
+  }
+})();
+</script>
+</body>
+</html>
